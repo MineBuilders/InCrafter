@@ -1,0 +1,58 @@
+name: Build a preview version for CLI
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'incrafter-app/**'
+      - '.gitignore'
+      - 'README.md'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: oracle
+
+      - name: Build for MingwX64
+        run: ./gradlew :incrafter-cli:linkReleaseExecutableMingwX64
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: incrafter-cli-${{ github.sha }}
+          path: incrafter-cli/build/bin/mingwX64/releaseExecutable/
+
+      - name: Compress executable using UPX
+        run: |
+          Invoke-WebRequest -Uri 'https://github.com/upx/upx/releases/download/v5.0.0/upx-5.0.0-win64.zip' -OutFile 'upx.zip'
+          Expand-Archive -Path 'upx.zip' -DestinationPath 'upx'
+          
+          $upxPath = Join-Path $PWD 'upx\upx-5.0.0-win64\upx.exe'
+          $buildDir = 'incrafter-cli\build\bin\mingwX64\releaseExecutable\'
+          
+          Get-ChildItem -Path $buildDir -Filter '*.exe' -Recurse | ForEach-Object {
+            $originalFile = $_.FullName
+            $compressedFile = Join-Path $_.Directory.FullName "compressed-$($_.Name)"
+            & $upxPath --ultra-brute -o $compressedFile $originalFile
+            Remove-Item $originalFile
+          }
+        shell: pwsh
+
+      - name: Upload compressed executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: incrafter-cli-compressed-${{ github.sha }}
+          path: incrafter-cli/build/bin/mingwX64/releaseExecutable/
