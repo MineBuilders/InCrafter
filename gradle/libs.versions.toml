@@ -1,5 +1,15 @@
 [versions]
+incrafter-version = "0.0.1-alpha"
+
+android-gradle-plugin = "8.5.2"
+android-sdk-compile = "34"
+android-sdk-min = "16"
+android-sdk-target = "34"
+kotlin = "2.1.20"
 
 [libraries]
 
 [plugins]
+android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
+android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
