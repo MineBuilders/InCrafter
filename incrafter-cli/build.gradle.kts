@@ -3,5 +3,18 @@ plugins {
 }
 
 kotlin {
-    mingwX64()
+    mingwX64 {
+        binaries {
+            executable {
+                entryPoint = "vip.cdms.incrafter.cli.main"
+            }
+        }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.ajalt.clikt)
+            implementation(projects.incrafterLib)
+        }
+    }
 }

@@ -19,6 +19,12 @@ kotlin {
     }
 
     mingwX64()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.korge.luak)
+        }
+    }
 }
 
 android {

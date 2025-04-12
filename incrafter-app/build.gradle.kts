@@ -11,6 +11,12 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.incrafterLib)
+        }
+    }
 }
 
 android {

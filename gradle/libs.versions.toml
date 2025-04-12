@@ -7,7 +7,15 @@ android-sdk-min = "16"
 android-sdk-target = "34"
 kotlin = "2.1.20"
 
+ajalt-clikt = "5.0.3"
+
 [libraries]
+# https://github.com/korlibs/korge-luak/issues/6
+# and kproject plugins is using already deprecated `android` source set...
+# so we can't apply kproject settings plugin.
+korge-luak = { module = "com.soywiz.korlibs.luak:luak", version = "4.0.0-alpha-2" }
+
+ajalt-clikt = { group = "com.github.ajalt.clikt", name = "clikt", version.ref = "ajalt-clikt" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" }
