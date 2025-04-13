@@ -25,6 +25,10 @@ kotlin {
             implementation(libs.korge.luak)
         }
     }
+
+    compilerOptions.freeCompilerArgs.addAll(
+        "-Xexpect-actual-classes",
+    )
 }
 
 android {
